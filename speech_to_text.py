@@ -32,7 +32,7 @@ while True:
         print("Listening...")
         said = sound.listen(audio)
     try:
-        text = sound.recognize_google(said, language="es-ES")
+        text = sound.recognize_google(said, language="en-US")
         print(f"Detected: {text}")
         for comnd in com:
             if comnd in text.lower():
@@ -43,4 +43,5 @@ while True:
         print("[No recognized words]")
     except speech.RequestError as e:
         print("[Error connecting to Google]", e)
+
 
