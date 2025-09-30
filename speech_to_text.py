@@ -6,9 +6,8 @@ sound = speech.Recognizer()
 
 ACCESS_TOKEN = "YOUR_ACCESS_TOKEN_FROM_META_DEVELOPERS"
 PHONE_NUMBER_ID = "YOUR_PHONE_NUMBER_ID_FROM_WHATSAPP_BUSINESS"
-RECIPIENT_NUMBER = "YOUR_PHONE_NUMBER"  # Incluye el código de país, ej: 502XXXXXXXX
+RECIPIENT_NUMBER = "YOUR_PHONE_NUMBER"  
 
-# Palabras clave a detectar
 com = ["yes", "no", "hi", "hello", "bye"]
 
 def send_whatsapp(message="Alert detected"):
@@ -44,7 +43,7 @@ while True:
                 print(f"You said: {comnd}")
                 resp = send_whatsapp(f"WARNING: detected word '{comnd}'")
                 print("Message sent:", resp)
-                break  # evita enviar más de un mensaje por cada frase
+                break 
 
     except speech.UnknownValueError:
         print("[No recognized words]")
@@ -52,5 +51,6 @@ while True:
         print("[Error connecting to Google]", e)
 
     time.sleep(0.5)
+
 
 
