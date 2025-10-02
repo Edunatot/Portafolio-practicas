@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Administración Área de Ventas</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    <link rel="icon" type="icon/png" href="https://cdn-icons-png.flaticon.com/512/10384/10384161.png">
+</head>
+
+<body>
+    <div class="enc">
+        <h1>Administracion Area de Ventas</h1>
+    </div>
+    <div class="senc">
+        <h2>Recursos Humanos</h2>
+    </div>
+
+    <button onclick="mostrar('ini')">Volver</button>
+    <h2 class="sub2">Registrar aplicantes</h2>
+    <div class="cont">
+        <form id="form-aplicante" class="form">
+            <label>Nombre: <input type="text" name="nombre" required></label><br>
+            <label>Edad: <input type="number" name="edad" required></label><br>
+            <label>Correo: <input type="email" name="correo" required></label><br>
+            <label>Celular: <input type="text" name="celular" required></label><br>
+            <label>Experiencia: <input type="number" name="experiencia" required></label><br>
+            <label>Nivel educación: <input type="number" name="nivel_ed" required></label><br>
+            <label>Horarios (y/n): <input type="text" name="horarios" required></label><br>
+            <label>Presentación: <input type="number" name="presentacion" required></label><br>
+            <label>Conocimiento: <input type="number" name="conocimiento" required></label><br>
+            <label>Comunicación: <input type="number" name="comunicacion" required></label><br>
+            <label>Resolución: <input type="number" name="resolucion" required></label><br>
+            <button class="send" type="submit">Registrar</button>
+        </form>
+
+        <h2 class="sub2">Aplicantes registrados</h2>
+        <ol id="lista-aplicantes"></ol>
+
+        <script>
+            function mostrar(id) {
+                document.querySelectorAll(".ventana").forEach(div => div.style.display = "none");
+                document.getElementById(id).style.display = "block";
+            }
+
+            const API_URL = "http://localhost:8002/aplicantes";
+
+            const form = document.getElementById("form-aplicante");
+            const lista = document.getElementById("lista-aplicantes");
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const data = Object.fromEntries(new FormData(form));
+                data.edad = parseInt(data.edad);
+                data.experiencia = parseInt(data.experiencia);
+                data.nivel_ed = parseInt(data.nivel_ed);
+                data.presentacion = parseInt(data.presentacion);
+                data.conocimiento = parseInt(data.conocimiento);
+                data.comunicacion = parseInt(data.comunicacion);
+                data.resolucion = parseInt(data.resolucion);
+
+                const res = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                alert(result.mensaje + " | Aprobado: " + result.aprobado);
+                form.reset();
+                listarAplicantes();
+            });
+
+            async function listarAplicantes() {
+                const res = await fetch(API_URL);
+                const aplics = await res.json();
+                lista.innerHTML = "";
+                if (aplics.length === 0) {
+                    lista.innerHTML = "<li>No hay aplicantes registrados</li>";
+                } else {
+                    aplics.forEach(a => {
+                        lista.innerHTML += `<li>${a.data.nombre} | Aprobado: ${a.aprobado}</li>`;
+                    });
+                }
+            }
+
+            listarAplicantes();
+        </script>
+    </div>
+</body>
+
+</html>
